@@ -1,0 +1,19 @@
+<launch>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_simulation)/urdf/robot.urdf.xacro'" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find robot_simulation)/world/maze.world"/>
+  </include>
+
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -param robot_description -model dif_robot"/>
+
+  <include file="$(find robot_simulation)/launch/rviz.launch" />
+
+   <node pkg="gmapping" type="slam_gmapping" name="maping_node">
+        <param name="base_frame" value="base_link" />
+        <param name="odom_frame" value="odom" />
+        <param name="delta" value="0.1" />
+    </node>  
+
+
+</launch>

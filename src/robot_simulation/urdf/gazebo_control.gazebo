@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<robot>
+    <gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <updateRate>100.0</updateRate>
+            <leftJoint>left_wheel_joint</leftJoint>
+            <rightJoint>right_wheel_joint</rightJoint>
+            <wheelSeparation>0.175</wheelSeparation>
+            <wheelDiameter>0.1</wheelDiameter>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+
+            <!-- Publish the Wheel Joint and His TF -->
+            <publishWheelTF>0</publishWheelTF>
+            <publishTF>0</publishTF>
+
+            <robotBaseFrame>base_link</robotBaseFrame>
+        </plugin>
+    </gazebo>
+
+
+    <!-- Camera plugin -->
+    <gazebo reference="camera_link">
+        <sensor name="camera_link_camera" type="depth">
+            <update_rate>30</update_rate>
+            <camera>
+                <horizontal_fov>1.047198</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>3</far>
+                </clip>
+            </camera>
+            <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
+                <baseline>0.2</baseline>
+                <alwaysOn>true</alwaysOn>
+                <!-- Keep this zero, update_rate in the parent <sensor> tag
+            will control the frame rate. -->
+                <updateRate>0.0</updateRate>
+                <cameraName>camera_ir</cameraName>
+                <imageTopicName>/camera/color/image_raw</imageTopicName>
+                <cameraInfoTopicName>/camera/color/camera_info</cameraInfoTopicName>
+                <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+                <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
+                <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+                <frameName>camera_link</frameName>
+                <pointCloudCutoff>0.3</pointCloudCutoff>
+                <pointCloudCutoffMax>10.0</pointCloudCutoffMax>
+                <distortionK1>0</distortionK1>
+                <distortionK2>0</distortionK2>
+                <distortionK3>0</distortionK3>
+                <distortionT1>0</distortionT1>
+                <distortionT2>0</distortionT2>
+                <CxPrime>0</CxPrime>
+                <Cx>0</Cx>
+                <Cy>0</Cy>
+                <focalLength>0</focalLength>
+                <hackBaseline>0</hackBaseline>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="lidar_link">
+        <sensor type="gpu_ray" name="head_hokuyo_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>false</visualize>
+            <update_rate>40</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>0</min_angle>
+                        <max_angle>6.28</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>6</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+                <topicName>laser_scan</topicName>
+                <frameName>lidar_link</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+            <updateRate>100</updateRate>
+            <jointName>front_wheel_joint</jointName>
+        </plugin>
+    </gazebo>
+
+
+
+
+
+    <!-- Color Gazebo -->
+    <gazebo reference="chassis">
+        <material>
+            Gazebo/Black
+        </material>
+    </gazebo>
+
+    <gazebo reference="left_wheel">
+        <material>
+            Gazebo/Red
+        </material>
+    </gazebo>
+
+    <gazebo reference="right_wheel">
+        <material>
+            Gazebo/Red
+        </material>
+    </gazebo>
+
+    <gazebo reference="front_caster_wheel_link">
+        <material>
+            Gazebo/White
+        </material>
+    </gazebo>
+
+    <gazebo reference="front_wheel_link">
+        <mu1>0.02</mu1>
+        <mu2>0.02</mu2>
+        <material>
+            Gazebo/Red
+        </material>
+    </gazebo>
+
+
+    <gazebo reference="lidar_link">
+        <material>
+            Gazebo/Blue
+        </material>
+    </gazebo>
+
+    <gazebo reference="camera_link">
+        <material>
+            Gazebo/Blue
+        </material>
+    </gazebo>
+
+
+
+</robot>
